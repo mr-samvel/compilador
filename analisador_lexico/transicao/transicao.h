@@ -2,14 +2,12 @@
 #define transicao_h
 
 #include "estado.h"
-#include "funcoes_de_transicoes/funcao_de_transicao.h"
+#include "funcoes_de_transicao/definicoes/funcao_de_transicao.h"
 
 class Transicao {
   public:
     Transicao(Estado* origem, FuncaoDeTransicao* transicao, Estado* fim): 
       _origem(origem), _transicao(transicao), _fim(fim) {};
-
-    ~Transicao();
     
     Estado* get_origem() { return _origem; };
     Estado* get_fim() { return _fim; };

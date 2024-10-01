@@ -5,10 +5,7 @@
 
 class FuncaoDeTransicao {
   public:
-    FuncaoDeTransicao();
-    ~FuncaoDeTransicao();
-    
-    virtual bool validar_transicao(char simbolo);
+    virtual bool validar_transicao(char simbolo) = 0;
 };
 
 #endif

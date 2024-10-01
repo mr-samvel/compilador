@@ -1,93 +1,49 @@
-# IDIR =.
-# CC=g++
-# LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system -lm  -lpng
-# CFLAGS=-I$(IDIR) -g -Wextra
+# Compiler
+CXX = g++
 
-# LDFLAGS= $(CFLAGS)
+# Compiler flags
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
 
-# ODIR=.
-# LIBS= $(LDLIBS) $(LDFLAGS)
+# Directories
+SRC_DIR = .
+ANALISADOR_LEXICO_DIR = analisador_lexico
+FNS_TRANSICAO_DIR = $(ANALISADOR_LEXICO_DIR)/funcoes_de_transicao
+DEFS_FNS_TRANSICAO_DIR = $(FNS_TRANSICAO_DIR)/definicoes
+TRANSICAO_DIR = $(ANALISADOR_LEXICO_DIR)/transicao
 
-# _DEPS = window.h main_class.h char.h pacman.h ghost.h game.h interface.h enum.h keyinput.h keyevent.h
-# DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-
-# SDIR = os
-
-# _os = thread.h system.h semaphore.h cpu.h debug.h traits.h
-# os = $(patsubst %,$(SDIR)/%,$(_os))
-
-# _OBJ = main.o window.o main_class.o thread.o system.o semaphore.o cpu.o debug.o char.o pacman.o ghost.o game.o interface.o keyinput.o keyevent.o
-# OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
-# $(ODIR)/%.o: %.c $(DEPS)
-# 	$(CC) -std=c++14 -c -o $@ $< $(CFLAGS) -Wextra
-
-# $(ODIR)/%.o: %.c $(os)
-# 	$(CC) -std=c++14 -c -o $@ $< -Wextra
-
-# main: $(OBJ)
-# 	$(CC) -std=c++14 -o $@ $^ $(CFLAGS) $(LIBS)
-
-# cpu.o: os/cpu.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-# system.o: os/system.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-# thread.o: os/thread.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-# semaphore.o: os/semaphore.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-# debug.o: os/debug.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-# main_class.o: main_class.cc
-# 	g++ -c $< -o $@ -Wall -std=c++17 -g
-
-# .PHONY: clean
-
-# clean:
-# 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
-	
-
-
-#### 
-# Name of the project
-PROJ_NAME=main
-
-# .c files
-C_SOURCE=$(wildcard *.cc)
-
-# .h files
-H_SOURCE=$(wildcard *.h)
+# Source files
+SRCS = $(wildcard $(SRC_DIR)/*.cc) \
+       $(wildcard $(ANALISADOR_LEXICO_DIR)/*.cc) \
+       $(wildcard $(FNS_TRANSICAO_DIR)/*.cc) \
+       $(wildcard $(TRANSICAO_DIR)/*.cc) \
+       $(wildcard $(DEFS_FNS_TRANSICAO_DIR)/*.cc)
 
 # Object files
-OBJ=$(C_SOURCE:.cc=.o)
+OBJS = $(SRCS:.cc=.o)
 
-# Compiler
-CC=g++
+# Executable name
+TARGET = main
 
-# Flags for compiler
-CC_FLAGS=-c         \
-         -W         \
-         -Wall      \
-         -ansi      \
-         -pedantic  \
-		 -std=gnu++11
+# Include directories
+INCLUDES = -I$(SRC_DIR) -I$(ANALISADOR_LEXICO_DIR) -I$(FNS_TRANSICAO_DIR) -I$(TRANSICAO_DIR) -I$(DEFS_FNS_TRANSICAO_DIR)
 
-#
-# Compilation and linking
-#
-all: $(PROJ_NAME)
+# Default target
+all: $(TARGET)
 
-$(PROJ_NAME): $(OBJ)
-	$(CC) -o $@ $^
+# Linking
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
 
-%.o: %.cc %.h
-	$(CC) -o $@ $< $(CC_FLAGS)
+# Compiling
+%.o: %.cc
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-main.o: main.cc $(H_SOURCE)
-	$(CC) -o $@ $< $(CC_FLAGS)
-
+# Clean
 clean:
-	rm -rf *.o $(PROJ_NAME) *~
+	rm -f $(OBJS) $(TARGET)
 
-valgrind:
-valgrind --tool=memcheck --leak-check=yes ./main
+# Run with Valgrind
+valgrind: $(TARGET)
+	valgrind --tool=memcheck --leak-check=yes ./$(TARGET)
+
+.PHONY: all clean valgrind

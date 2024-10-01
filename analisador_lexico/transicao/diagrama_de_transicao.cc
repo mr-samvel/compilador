@@ -12,5 +12,3 @@ std::set<Transicao*> DiagramaDeTransicao::transicoes(Estado* estado) {
     transicoes.insert(transicao);
   return transicoes;
 }
-
-DiagramaDeTransicao::~DiagramaDeTransicao() {}

@@ -5,7 +5,7 @@
 
 class TransicaoChar : public FuncaoDeTransicao {
   public:
-    bool validar_transicao(char simbolo);
+    bool validar_transicao(char simbolo) override;
 };
 
 #endif
