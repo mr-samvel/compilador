@@ -4,6 +4,9 @@ CXX = g++
 # Compiler flags
 CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
 
+# Debugging flags
+DEBUG_FLAGS = -g
+
 # Directories
 SRC_DIR = .
 ANALISADOR_LEXICO_DIR = analisador_lexico
@@ -27,6 +30,9 @@ TARGET = main
 # Include directories
 INCLUDES = -I$(SRC_DIR) -I$(ANALISADOR_LEXICO_DIR) -I$(FNS_TRANSICAO_DIR) -I$(TRANSICAO_DIR) -I$(DEFS_FNS_TRANSICAO_DIR)
 
+# Debugging mode
+DEBUG = 0
+
 # Default target
 all: $(TARGET)
 
@@ -36,7 +42,7 @@ $(TARGET): $(OBJS)
 
 # Compiling
 %.o: %.cc
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(if $(DEBUG),$(DEBUG_FLAGS)) -c $< -o $@
 
 # Clean
 clean:
@@ -46,4 +52,8 @@ clean:
 valgrind: $(TARGET)
 	valgrind --tool=memcheck --leak-check=yes ./$(TARGET)
 
-.PHONY: all clean valgrind
+# Set debugging option
+debug:
+	$(MAKE) DEBUG=1
+
+.PHONY: all clean valgrind debug

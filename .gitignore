@@ -21,7 +21,6 @@ build/
 bin/
 
 # IDE and editor files
-.vscode/
 *.swp
 *~
 
@@ -46,9 +45,6 @@ core
 
 # Valgrind output files
 vgcore.*
-
-# Custom input files (if you want to ignore them)
-input
 
 # Backup files
 *.bak

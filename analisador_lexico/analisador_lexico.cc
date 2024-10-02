@@ -31,4 +31,6 @@ std::vector<TokenEnum> AnalisadorLexico::analisar(const std::string &input) {
       estado_atual = nullptr;
     }
   }
+
+  return tokens;
 }
