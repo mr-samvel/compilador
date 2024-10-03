@@ -48,3 +48,5 @@ vgcore.*
 
 # Backup files
 *.bak
+
+.vscode/settings.json

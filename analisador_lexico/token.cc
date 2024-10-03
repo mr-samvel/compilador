@@ -6,5 +6,7 @@ const std::string token_to_string(TokenEnum token) {
       return "IDENT";
     case TokenEnum::OUTRO:
       return "OUTRO";
+    case TokenEnum::NOVA_LINHA:
+      return "\n";
   }
 }

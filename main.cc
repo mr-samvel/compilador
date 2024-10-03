@@ -23,7 +23,7 @@ int main() {
   std::vector<TokenEnum> tokens = analisador_lexico.analisar(input);
 
   for (const TokenEnum token : tokens)
-    std::cout << token_to_string(token) << " ";
+    std::cout << token_to_string(token) << (token == TokenEnum::NOVA_LINHA ? "" : " ");
   
   std::cout << std::endl;
 

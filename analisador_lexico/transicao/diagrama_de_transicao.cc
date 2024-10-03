@@ -4,6 +4,7 @@ Estado* DiagramaDeTransicao::proximo_estado(Estado* atual, char simbolo) {
   std::set<Transicao*> transicoes = this->transicoes(atual);
   for (Transicao* transicao : transicoes) if (transicao->transicao_eh_valida(simbolo))
     return transicao->get_fim();
+  return nullptr;
 }
 
 std::set<Transicao*> DiagramaDeTransicao::transicoes(Estado* estado) {

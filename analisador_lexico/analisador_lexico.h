@@ -18,6 +18,7 @@ class AnalisadorLexico {
 
   private:
     bool eh_branco(char c) { return std::isspace(static_cast<unsigned char>(c)); };
+    bool eh_nova_linha(char c) { return c == '\n'; };
     
   private:
     DiagramaDeTransicao* _diagrama_ident;

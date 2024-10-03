@@ -5,6 +5,7 @@
 
 enum class TokenEnum {
   IDENT,
+  NOVA_LINHA,
   OUTRO
 };
 
