@@ -8,5 +8,9 @@ const std::string token_to_string(TokenEnum token) {
       return "OUTRO";
     case TokenEnum::NOVA_LINHA:
       return "\n";
+    case TokenEnum::NI:
+      return "NI";
+    case TokenEnum::NPF:
+      return "NPF";
   }
 }

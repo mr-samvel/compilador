@@ -8,6 +8,7 @@
 int main() {
   std::ifstream input_file("input");
   if (!input_file.is_open()) {
+    input_file.close();
     std::cerr << "Não foi possível abrir o arquivo!" << std::endl;
     return 1;
   }

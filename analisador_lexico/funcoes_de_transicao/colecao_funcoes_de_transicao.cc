@@ -3,6 +3,7 @@
 TransicaoChar* ColecaoFuncoesDeTransicao::_transicao_char = nullptr;
 TransicaoDigito* ColecaoFuncoesDeTransicao::_transicao_digito = nullptr;
 TransicaoLiteral* ColecaoFuncoesDeTransicao::_transicao_underline = nullptr;
+TransicaoLiteral* ColecaoFuncoesDeTransicao::_transicao_ponto = nullptr;
 TransicaoOutro* ColecaoFuncoesDeTransicao::_transicao_outro = nullptr;
 
 TransicaoChar* ColecaoFuncoesDeTransicao::get_fn_transicao_char() {
@@ -26,11 +27,19 @@ TransicaoLiteral* ColecaoFuncoesDeTransicao::get_fn_transicao_underline() {
     return _transicao_underline;
 }
 
+TransicaoLiteral* ColecaoFuncoesDeTransicao::get_fn_transicao_ponto() {
+    if (_transicao_ponto == nullptr) {
+        _transicao_ponto = new TransicaoLiteral('.');
+    }
+    return _transicao_ponto;
+}
+
 TransicaoOutro* ColecaoFuncoesDeTransicao::get_fn_transicao_outro() {
     std::vector<FuncaoDeTransicao*> funcoes_de_transicao = {
         get_fn_transicao_char(),
         get_fn_transicao_digito(),
-        get_fn_transicao_underline()
+        get_fn_transicao_underline(),
+        get_fn_transicao_ponto()
     };
 
     if (_transicao_outro == nullptr) {

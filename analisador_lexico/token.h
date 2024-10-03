@@ -6,6 +6,8 @@
 enum class TokenEnum {
   IDENT,
   NOVA_LINHA,
+  NI,
+  NPF,
   OUTRO
 };
 

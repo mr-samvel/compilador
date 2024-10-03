@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cctype>
+#include <tuple>
 
 #include "token.h"
 #include "transicao/diagrama_de_transicao.h"
@@ -11,17 +12,23 @@
 
 class AnalisadorLexico {
   public:
-    AnalisadorLexico()
-      : _diagrama_ident(FabricaDiagramaDeTransicao::get_diagrama_ident()) {}
+    AnalisadorLexico() : 
+      _diagrama_ident(FabricaDiagramaDeTransicao::get_diagrama_ident()),
+      _diagrama_int(FabricaDiagramaDeTransicao::get_diagrama_int()),
+      _diagrama_float(FabricaDiagramaDeTransicao::get_diagrama_float()) 
+    {}
 
     std::vector<TokenEnum> analisar(const std::string& input);
 
   private:
     bool eh_branco(char c) { return std::isspace(static_cast<unsigned char>(c)); };
     bool eh_nova_linha(char c) { return c == '\n'; };
+    std::tuple<int, TokenEnum> _analisar_trecho(const int i, const std::string &input, DiagramaDeTransicao* diagrama);
     
   private:
     DiagramaDeTransicao* _diagrama_ident;
+    DiagramaDeTransicao* _diagrama_int;
+    DiagramaDeTransicao* _diagrama_float;
 };
 
 #endif

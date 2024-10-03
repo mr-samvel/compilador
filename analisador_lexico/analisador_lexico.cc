@@ -1,46 +1,78 @@
+#include <functional>
+#include <algorithm>
+
 #include "analisador_lexico.h"
 #include "transicao/fabrica_diagrama_de_transicao.h"
-#include <stdlib.h>
-#include <iostream>
 
 std::vector<TokenEnum> AnalisadorLexico::analisar(const std::string &input) {
   std::vector<TokenEnum> tokens;
+  std::vector<int> i_obtidos;
+  std::vector<TokenEnum> tokens_obtidos;
+
+  for (size_t i = 0; i < input.length(); i++) {
+    int x; TokenEnum token;
+
+    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_ident);
+    i_obtidos.push_back(x);
+    tokens_obtidos.push_back(token);
+
+    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_int);
+    i_obtidos.push_back(x);
+    tokens_obtidos.push_back(token);
+
+    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_float);
+    i_obtidos.push_back(x);
+    tokens_obtidos.push_back(token);
+
+    auto it_tokens_obtidos = std::find_if(tokens_obtidos.begin(), tokens_obtidos.end(), [](TokenEnum t) {
+        return t != TokenEnum::OUTRO && t != TokenEnum::NOVA_LINHA;
+    });
+
+    if (it_tokens_obtidos != tokens_obtidos.end()) {
+      size_t idx = std::distance(tokens_obtidos.begin(), it_tokens_obtidos);
+      tokens.push_back(tokens_obtidos[idx]);
+      i = i_obtidos[idx];
+    } else {
+      tokens.push_back(tokens_obtidos[0]);
+      auto it = std::max_element(i_obtidos.begin(), i_obtidos.end());
+      i = i_obtidos[std::distance(i_obtidos.begin(), it)];
+    }
+
+    i_obtidos.clear();
+    tokens_obtidos.clear();
+  }
+
+  return tokens;
+}
+
+std::tuple<int, TokenEnum> AnalisadorLexico::_analisar_trecho(const int k, const std::string &input, DiagramaDeTransicao* diagrama) {
   std::string lexema;
   Estado* estado_atual = nullptr;
 
-  for (size_t i = 0; i < input.length(); ++i) {
+  for (size_t i = k; i < input.length(); ++i) {
     char c = input[i];
 
     if (eh_branco(c) && lexema.empty()) {
-      if (eh_nova_linha(c))
-        tokens.push_back(TokenEnum::NOVA_LINHA);
       continue;
+      // if (eh_nova_linha(c))
+      //   return std::tuple<int, TokenEnum> (i, TokenEnum::NOVA_LINHA);
     }
 
     if (estado_atual == nullptr)
-      estado_atual = _diagrama_ident->proximo_estado(_diagrama_ident->get_estado_inicial(), c);
+      estado_atual = diagrama->proximo_estado(diagrama->get_estado_inicial(), c);
     else 
-      estado_atual = _diagrama_ident->proximo_estado(estado_atual, c);
+      estado_atual = diagrama->proximo_estado(estado_atual, c);
 
-    if (estado_atual == nullptr) {
-      tokens.push_back(TokenEnum::OUTRO);
-      lexema.clear();
-      continue;
-    }
+    if (estado_atual == nullptr)
+      return std::tuple<int, TokenEnum> (i, TokenEnum::OUTRO);
     
     if (estado_atual->eh_final()) {
       if (estado_atual->eh_retorno_de_pilha())
         --i;
-      else
-        lexema += c;
       
-      tokens.push_back(TokenEnum::IDENT);
-      lexema.clear();
-      estado_atual = nullptr;
+      return std::tuple<int, TokenEnum> (i, diagrama->get_token());
     } else {
       lexema += c;
     }
   }
-
-  return tokens;
 }

@@ -6,6 +6,8 @@
 class FabricaDiagramaDeTransicao {
   public:
     static DiagramaDeTransicao* get_diagrama_ident();
+    static DiagramaDeTransicao* get_diagrama_int();
+    static DiagramaDeTransicao* get_diagrama_float();
 
   private:
     FabricaDiagramaDeTransicao() = delete;  // Previne instanciação, esta é uma classe estática
