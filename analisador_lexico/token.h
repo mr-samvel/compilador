@@ -5,6 +5,7 @@
 
 enum class TokenEnum {
   IDENT,
+  PALAVRA_RESERVADA,
   NOVA_LINHA,
   NI,
   NPF,

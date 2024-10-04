@@ -24,9 +24,11 @@ int main() {
   std::vector<TokenEnum> tokens = analisador_lexico.analisar(input);
 
   for (const TokenEnum token : tokens)
-    std::cout << token_to_string(token) << (token == TokenEnum::NOVA_LINHA ? "" : " ");
-  
+    std::cout << token_to_string(token) << (token == TokenEnum::NOVA_LINHA ? "" : " ");  
   std::cout << std::endl;
+
+  std::cout << std::endl << "Tabela de símbolos: " << std::endl;
+  std::cout << analisador_lexico.tabela_de_simbolos_to_string();
 
   return 0;
 }
