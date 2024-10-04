@@ -10,22 +10,23 @@ std::vector<TokenEnum> AnalisadorLexico::analisar(const std::string &input) {
   std::vector<TokenEnum> tokens_obtidos;
 
   for (size_t i = 0; i < input.length(); i++) {
-    int x; TokenEnum token;
+    if (eh_branco(input[i])) {
+      if (eh_nova_linha(input[i]))
+        tokens.push_back(TokenEnum::NOVA_LINHA);
+      continue;
+    }
+    
+    int x;
+    TokenEnum token;
 
-    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_ident);
-    i_obtidos.push_back(x);
-    tokens_obtidos.push_back(token);
-
-    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_int);
-    i_obtidos.push_back(x);
-    tokens_obtidos.push_back(token);
-
-    std::tie(x, token) = _analisar_trecho(i, input, _diagrama_float);
-    i_obtidos.push_back(x);
-    tokens_obtidos.push_back(token);
+    for (DiagramaDeTransicao* diagrama : _diagramas) {
+      std::tie(x, token) = _analisar_trecho(i, input, diagrama);
+      i_obtidos.push_back(x);
+      tokens_obtidos.push_back(token);
+    }
 
     auto it_tokens_obtidos = std::find_if(tokens_obtidos.begin(), tokens_obtidos.end(), [](TokenEnum t) {
-        return t != TokenEnum::OUTRO && t != TokenEnum::NOVA_LINHA;
+      return t != TokenEnum::OUTRO;
     });
 
     if (it_tokens_obtidos != tokens_obtidos.end()) {
@@ -51,12 +52,6 @@ std::tuple<int, TokenEnum> AnalisadorLexico::_analisar_trecho(const int k, const
 
   for (size_t i = k; i < input.length(); ++i) {
     char c = input[i];
-
-    if (eh_branco(c) && lexema.empty()) {
-      continue;
-      // if (eh_nova_linha(c))
-      //   return std::tuple<int, TokenEnum> (i, TokenEnum::NOVA_LINHA);
-    }
 
     if (estado_atual == nullptr)
       estado_atual = diagrama->proximo_estado(diagrama->get_estado_inicial(), c);

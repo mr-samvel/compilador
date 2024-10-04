@@ -13,9 +13,11 @@
 class AnalisadorLexico {
   public:
     AnalisadorLexico() : 
-      _diagrama_ident(FabricaDiagramaDeTransicao::get_diagrama_ident()),
-      _diagrama_int(FabricaDiagramaDeTransicao::get_diagrama_int()),
-      _diagrama_float(FabricaDiagramaDeTransicao::get_diagrama_float()) 
+      _diagramas{
+        FabricaDiagramaDeTransicao::get_diagrama_ident(),
+        FabricaDiagramaDeTransicao::get_diagrama_int(),
+        FabricaDiagramaDeTransicao::get_diagrama_float()
+      }
     {}
 
     std::vector<TokenEnum> analisar(const std::string& input);
@@ -26,9 +28,7 @@ class AnalisadorLexico {
     std::tuple<int, TokenEnum> _analisar_trecho(const int i, const std::string &input, DiagramaDeTransicao* diagrama);
     
   private:
-    DiagramaDeTransicao* _diagrama_ident;
-    DiagramaDeTransicao* _diagrama_int;
-    DiagramaDeTransicao* _diagrama_float;
+    DiagramaDeTransicao* _diagramas[3];
 };
 
 #endif
