@@ -1,5 +1,7 @@
 #include <functional>
 #include <algorithm>
+#include <thread>
+#include <future>
 
 #include "analisador_lexico.h"
 #include "transicao/fabrica_diagrama_de_transicao.h"
@@ -16,13 +18,15 @@ std::vector<TokenEnum> AnalisadorLexico::analisar(const std::string &input) {
       continue;
     }
     
-    int x;
-    TokenEnum token;
+    std::vector<std::future<std::tuple<int, TokenEnum>>> futures;
 
-    for (DiagramaDeTransicao* diagrama : _diagramas) {
-      std::tie(x, token) = _analisar_trecho(i, input, diagrama);
-      i_obtidos.push_back(x);
-      tokens_obtidos.push_back(token);
+    for (DiagramaDeTransicao* diagrama : _diagramas)
+      futures.push_back(std::async(std::launch::async, &AnalisadorLexico::_analisar_trecho, this, i, std::ref(input), diagrama));
+
+    for (auto& future : futures) {
+      std::tuple<int, TokenEnum> result = future.get();
+      i_obtidos.push_back(std::get<0>(result));
+      tokens_obtidos.push_back(std::get<1>(result));
     }
 
     auto it_tokens_obtidos = std::find_if(tokens_obtidos.begin(), tokens_obtidos.end(), [](TokenEnum t) {
